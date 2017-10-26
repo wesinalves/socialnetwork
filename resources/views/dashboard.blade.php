@@ -28,9 +28,9 @@
 						@if(Auth::user() == $post->user)
 							|
 							<a href="#" class="edit">Edit</a> |
-							<a href="{{route('post.delete',['post_id'=>$post->id])}}">Delete</a>
+							<a href="{{route('post.delete',['post_id'=>$post->id])}}">Delete</a> |
 						@endif
-						
+						<a href="#" class="comment">Comment</a>
 					</div>
 				</article>
 			@endforeach
@@ -56,12 +56,39 @@
         </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary" id="modal-save">Save changes</button>
+        <button type="button" class="btn btn-primary" id="post-save">Save changes</button>
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
       </div>
     </div>
   </div>
 </div>
+
+<div class="modal" id="comment-modal">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Comment Post</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+        <form>
+        	<div class="form-group">
+        		<label for="post-comment">Comment the post</label>
+        		<textarea name="post-comment" id="post-comment" rows=5 class="form-control"></textarea>
+        	</div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" id="comment-save">Save changes</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script type="text/javascript">
 	var token = '{{ Session::token() }}';
 	var urlEdit = '{{route('edit')}}';

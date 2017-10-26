@@ -12,7 +12,12 @@ $('.post').find('.interaction').find('.edit').on('click', function(event){
 	$('#edit-modal').modal();
 });
 
-$('#modal-save').click('on', function(){
+$('.comment').click('on', function(event){
+	event.preventDefault();
+	$('#comment-modal').modal();
+});
+
+$('#post-save').click('on', function(){
 	$.ajax({
 		method: 'POST',
 		url: urlEdit,
