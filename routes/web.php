@@ -90,6 +90,13 @@ Route::group(['middleware'=>['web']], function() {
 
 	]);
 
+	Route::post('/comment-create', [
+		'uses' => 'PostController@postCreateComment',
+		'as' => 'comment.create',
+		'middleware'=>'auth'
+
+	]);
+
 });
 
 

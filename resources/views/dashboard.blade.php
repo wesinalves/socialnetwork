@@ -19,7 +19,8 @@
 		<div class="col-md-6 col-md-offset-3">
 			<header><h3>What pet says</h3></header>
 			@foreach($posts as $post)
-				<article class="post" data-postid="{{ $post->id }}">
+				
+        <article class="post" data-postid="{{ $post->id }}">
 					<p>{{$post->body}}</p>
 					<div class="info">Posted by {{$post->user->first_name}} on {{$post->created_at}}</div>
 					<div class="interaction">
@@ -30,12 +31,27 @@
 							<a href="#" class="edit">Edit</a> |
 							<a href="{{route('post.delete',['post_id'=>$post->id])}}">Delete</a> |
 						@endif
-						<a href="#" class="comment">Comment</a>
+						
 					</div>
 				</article>
+        <div class='comment' id='commentsPost{{ $post->id }}'>
+         
+          <div class="form-group">
+              <input type='text' name="comment" id="comment" class="form-control" placeholder="comment the post" >
+              <input type='hidden' name="post_id" id="post_id" value="{{ $post->id }}">
+              {{csrf_field()}}            
+          </div>
+
+          @foreach($post->comments()->where('post_id',$post->id)->get() as $comment)
+            <p><span style="font-weight: bold">{{$comment->user()->first()->first_name}}</span> {{$comment->comment}}</p>
+          @endforeach
+      
+        </div>
+        
 			@endforeach
-			
+		{{ $posts->links() }}	
 		</div>
+
 	</section>
 
 <div class="modal" id="edit-modal">
@@ -62,7 +78,7 @@
     </div>
   </div>
 </div>
-
+<?php /*
 <div class="modal" id="comment-modal">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -74,12 +90,16 @@
       </div>
       <div class="modal-body">
 
+        <div id="comments-body">
+          
+        </div>
+
         <form>
-        	<div class="form-group">
-        		<label for="post-comment">Comment the post</label>
-        		<textarea name="post-comment" id="post-comment" rows=5 class="form-control"></textarea>
-        	</div>
+          <div class="form-group">
+            <input type='text' name="post-comment" id="post-comment" class="form-control" placeholder="comment the post">
+          </div>
         </form>
+
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-primary" id="comment-save">Save changes</button>
@@ -88,10 +108,11 @@
     </div>
   </div>
 </div>
-
+*/ ?>
 <script type="text/javascript">
 	var token = '{{ Session::token() }}';
 	var urlEdit = '{{route('edit')}}';
-	var urlLike = '{{route('like')}}'
+	var urlLike = '{{route('like')}}';
+  var urlComment = '{{route('comment.create')}}';
 </script>
 @endsection

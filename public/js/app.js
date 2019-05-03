@@ -12,9 +12,32 @@ $('.post').find('.interaction').find('.edit').on('click', function(event){
 	$('#edit-modal').modal();
 });
 
-$('.comment').click('on', function(event){
+$('input').keyup(function(e){
+    if(e.keyCode == 13)
+    {
+        $(this).trigger("enterKey");
+    }
+});
+
+$('input').bind('enterKey', function(event){
 	event.preventDefault();
-	$('#comment-modal').modal();
+	postId = event.target.parentNode.childNodes[3].value;
+	comment = event.target.value;
+
+	$.ajax({
+		method: 'POST',
+		url: urlComment,
+		data: {comment: comment, postId: postId, _token: token }
+	})
+	.done(function(msg){
+
+		user = msg['new_comment'].name;
+		comment = msg['new_comment'].comment;
+		var commentHtml = "<p><span style='font-weight: bold'>" + user + "</span> " + comment + "</p>";
+		eval("$('#commentsPost"+postId+"')").append(commentHtml);
+		event.target.value = '';
+	})
+	
 });
 
 $('#post-save').click('on', function(){
@@ -28,6 +51,8 @@ $('#post-save').click('on', function(){
 		$('#edit-modal').modal('hide');
 	})
 });
+
+
 
 $('.like').click('on', function(event){
 	event.preventDefault();

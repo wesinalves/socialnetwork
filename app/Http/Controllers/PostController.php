@@ -3,13 +3,17 @@ namespace App\Http\Controllers;
 
 use App\Post;
 use App\Like;
+use App\Comment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 
 class PostController extends Controller{
+
+	private $totalPag = 3;
+
 	public function getDashboard(){
-		$posts = Post::orderBy('created_at','desc')->get();
+		$posts = Post::orderBy('created_at','desc')->paginate($this->totalPag);
 		return view('dashboard', ['posts'=>$posts]);
 	}
 
@@ -54,6 +58,17 @@ class PostController extends Controller{
 		return response()->json(['new_body'=>$post->body],200);
 	}
 
+	public function getJsonComments(Request $request){
+		
+		$post = Post::find($request['postId']);
+		//select by post id required
+		#$comments = Comment::orderBy('created_at','desc')->get();
+		$comments = $post->comments()->where('post_id',$post->id)->get();
+		
+
+		return response()->json(['table'=>$comments],200);
+	}
+
 	public function postLikePost(Request $request){
 		$post_id = $request['postId'];
 		$is_like = $request['isLike'] === 'true';
@@ -86,5 +101,26 @@ class PostController extends Controller{
 		return null;
 	}
 
+	public function postCreateComment(Request $request){
+
+		$this->validate($request, [
+			'comment' => 'required|max:1000'
+		]);
+
+		$post = Post::find($request['postId']);
+
+		$comment = new Comment();
+		$comment->comment = $request['comment'];
+		$comment->user_id = Auth::user()->id;
+		
+		$message = 'there was a error';
+		if($post->comments()->save($comment)){
+			$comment->name = Auth::user()->first_name;
+			return response()->json(['new_comment'=>$comment],200);
+		}
+
+		return redirect()->route('dashboard')->with(['message'=>$message]);
+		
+	}
 
 }

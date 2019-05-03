@@ -11,12 +11,19 @@
 .posts .post{
 	padding-left:10px;
 	border-left: 3px solid #a21b24;
-	margin-bottom: 30px;
+	margin-bottom: 15px;
 }
 
 .posts .post .info{
 	color: #aaa;
 	font-style: italic;
+}
+
+.posts .comment{
+	padding-left:2px;
+	padding-right:2px;
+	background-color: #ededed;
+	margin-bottom: 5px;
 }
 
 .error ul{
